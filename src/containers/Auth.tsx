@@ -53,6 +53,7 @@ export const Auth = () => {
           placeholder="Password"
         />
 
+        {/*TODO: Preferably set a type='submit' for purposes of clear code*/}
         <button className="auth-btn">
           {isSignin ? "Log in" : "Create Account"}
         </button>

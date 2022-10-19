@@ -6,6 +6,7 @@ type AuthContextProps = {
 };
 
 type ContextValue = {
+  // TODO: Use camelCase for variable names
   signup: (username: string, password: string) => void;
   signin: (username: string, password: string) => void;
   signout: () => void;
@@ -26,6 +27,8 @@ const AuthContextProvider = ({ children }: AuthContextProps) => {
 
   const signin = (username: string, password: string) => {
     //check if username supplied exists else show error
+    // TODO: It's better to define actual types for the data you're working with.
+    // Helps identify bugs @ compile time and also helps with code readability
     const existingCreds = JSON.parse(
       localStorage.getItem("chuck_norris_credentials") || "[]"
     );

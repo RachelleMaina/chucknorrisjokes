@@ -4,6 +4,8 @@ import { AiOutlineArrowRight } from "react-icons/ai";
 import { useNavigate } from "react-router";
 
 const Categories = () => {
+  // TODO: Maybe you can use nullable values instead for cases where you'd like to force
+  // TODO: users of this component to wrap it inside a DataContextProvider
   const { categories, getDailyFeed, getCategories, getJokesByCategories } =
     useContext(DataContext);
 
@@ -17,6 +19,7 @@ const Categories = () => {
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     cat: string
   ) => {
+    // TODO: This line can be moved to a standalone function since it's duplicated.
     event.currentTarget.classList.toggle("active-cat");
     getJokesByCategories(cat);
   };
