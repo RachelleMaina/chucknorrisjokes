@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/chucknorrisjokes/static/css/main.42f78599.css",
-    "main.js": "/chucknorrisjokes/static/js/main.b480c176.js",
+    "main.js": "/chucknorrisjokes/static/js/main.6bc66c4b.js",
     "static/js/787.e0a94f49.chunk.js": "/chucknorrisjokes/static/js/787.e0a94f49.chunk.js",
     "static/media/chucknorris_logo.png": "/chucknorrisjokes/static/media/chucknorris_logo.8cef148e44782b060a5c.png",
     "index.html": "/chucknorrisjokes/index.html",
     "main.42f78599.css.map": "/chucknorrisjokes/static/css/main.42f78599.css.map",
-    "main.b480c176.js.map": "/chucknorrisjokes/static/js/main.b480c176.js.map",
+    "main.6bc66c4b.js.map": "/chucknorrisjokes/static/js/main.6bc66c4b.js.map",
     "787.e0a94f49.chunk.js.map": "/chucknorrisjokes/static/js/787.e0a94f49.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.42f78599.css",
-    "static/js/main.b480c176.js"
+    "static/js/main.6bc66c4b.js"
   ]
 }
