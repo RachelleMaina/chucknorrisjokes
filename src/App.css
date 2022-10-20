@@ -1,7 +1,8 @@
 @import url("https://fonts.cdnfonts.com/css/satoshi");
-
-.container {
+body {
   background-color: #000;
+}
+.container {
   font-family: "Satoshi", sans-serif;
   padding: 0 100px 40px;
 }
@@ -14,6 +15,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.navbar-container {
+  cursor: pointer;
 }
 .saved-link {
   margin-right: 15px;
@@ -110,6 +114,9 @@ label {
 }
 .joke-cat-wrapper {
   display: flex;
+  flex-flow: row wrap;
+  position: relative;
+  width: 100%;
   padding: 30px 0;
 }
 .joke-cat {
@@ -143,13 +150,12 @@ label {
   background-color: #fff;
   border-radius: 8px;
   padding: 10px 30px;
-  height: 220px;
+  height: 260px;
   margin: 10px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   flex: 0 1 calc(20% - 80px);
-  overflow: scroll;
 }
 .joke-fav-icon {
   align-self: end;
@@ -164,4 +170,42 @@ label {
   padding: 2px 5px;
   font-weight: 500;
   font-size: 12px;
+}
+.loader {
+  color: #fff;
+  font-size: 30px;
+  text-align: center;
+}
+.error {
+  color: #f15a24;
+  font-size: 30px;
+  text-align: center;
+  padding: 30px 0;
+}
+.joke-by-cat-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 20px;
+}
+.joke-by-cat-footer-btn {
+  border: 1px solid #f15a24;
+  color: #f15a24;
+  padding: 5px 15px;
+  margin: 5px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 400;
+}
+.joke-by-cat-footer-btn:hover {
+  border: 1px solid #f15a24;
+  background-color: #f15a24;
+  color: #fff;
+}
+.joke-by-cat-wrapper {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px 30px;
+  margin: 20px 0;
+  width: 100%;
 }

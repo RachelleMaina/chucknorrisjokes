@@ -1,10 +1,10 @@
-import React, { useContext, useEffect } from "react";
-import { DataContext } from "../context/DataContext";
-import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
+import React, {  useEffect } from "react";
+import {  useDataContext } from "../context/DataContext";
+import {  AiFillHeart } from "react-icons/ai";
 import { useNavigate } from "react-router";
 
 const Saved = () => {
-  const { saveJoke, savedJokes, dailyFeed } = useContext(DataContext);
+  const { saveJoke, savedJokes } = useDataContext();
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -15,22 +15,17 @@ const Saved = () => {
 
   return (
     <div className="daily-feed-wrapper">
-      {dailyFeed.map((joke, i) =>
-        savedJokes.includes(joke.id) ? (
-          <div className="daily-feed" key={joke.id}>
-            <p>{joke.value}</p>
+      {savedJokes.map((joke, i) => (
+          <div className="daily-feed" key={i}>
+            <p>{joke}</p>
             <div
               className="joke-fav-icon"
-              onClick={() => saveJoke(joke.id, joke.value)}
+              onClick={() => saveJoke(joke)}
             >
-              {savedJokes.includes(joke.id) ? (
-                <AiFillHeart size={25} className="fav-icon" />
-              ) : (
-                <AiOutlineHeart size={25} className="fav-icon" />
-              )}
+            <AiFillHeart size={25} className="fav-icon" />
             </div>
           </div>
-        ) : null
+        )
       )}
     </div>
   );

@@ -1,20 +1,20 @@
-import React, { useContext, useState } from "react";
-import { AuthContext } from "../context/AuthContext";
+import React, { useState } from "react";
+import { useAuthContext } from "../context/AuthContext";
 
 export const Auth = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isSignin, setIsSignin] = useState(true);
-  const { authErr, signin, signup } = useContext(AuthContext);
+  const { authErr, signIn, signUp } = useAuthContext();
 
   const userSignup = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    signup(username, password);
+    signUp(username, password);
   };
 
   const userSignin = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    signin(username, password);
+    signIn(username, password);
   };
 
   const onChangeUsername = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,7 +54,7 @@ export const Auth = () => {
         />
 
         {/*TODO: Preferably set a type='submit' for purposes of clear code*/}
-        <button className="auth-btn">
+        <button className="auth-btn" type="submit">
           {isSignin ? "Log in" : "Create Account"}
         </button>
         <p className="dont-have-account">
