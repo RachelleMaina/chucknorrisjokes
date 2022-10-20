@@ -30,8 +30,13 @@ export const DataContext = React.createContext<ContextValue>({
   saveJoke: (jokeId: string, value: string) => {},
 });
 
+interface Category {
+  id: number;
+    name: string;
+}
+
 const DataContextProvider = ({ children }: DataContextProps) => {
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [jokesByCategories, setJokesByCategories] = useState([]);
   const [dailyFeed, setDailyFeed] = useState([]);
   // TODO: Saved jokes do not reflect on page refresh - You can initialize this array to what's
@@ -78,7 +83,7 @@ const DataContextProvider = ({ children }: DataContextProps) => {
   };
 
   const saveJoke = (jokeId: string, value: string) => {
-    // TODO: Preferably use types instead of any.
+    // TODO: Preferably use types instead of any. @Baly fi
     // TODO: Also, you can use a Set (which in javascript is O(1) instead of O(n) for lookup in cases of array)
     // TODO: Set's are also easy to use intuitively - they cannot duplicate values
     const savedJokes = JSON.parse(
