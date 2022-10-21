@@ -83,7 +83,7 @@ const DataContextProvider = ({ children }: DataContextProps) => {
   };
 
   const saveJoke = (jokeId: string, value: string) => {
-    // TODO: Preferably use types instead of any. @Baly fi
+    // TODO: Preferably use types instead of any.
     // TODO: Also, you can use a Set (which in javascript is O(1) instead of O(n) for lookup in cases of array)
     // TODO: Set's are also easy to use intuitively - they cannot duplicate values
     const savedJokes = JSON.parse(
