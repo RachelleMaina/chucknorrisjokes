@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/chucknorrisjokes/static/css/main.42f78599.css",
-    "main.js": "/chucknorrisjokes/static/js/main.6bc66c4b.js",
+    "main.css": "/chucknorrisjokes/static/css/main.d85b0f04.css",
+    "main.js": "/chucknorrisjokes/static/js/main.9ab0faf8.js",
     "static/js/787.e0a94f49.chunk.js": "/chucknorrisjokes/static/js/787.e0a94f49.chunk.js",
     "static/media/chucknorris_logo.png": "/chucknorrisjokes/static/media/chucknorris_logo.8cef148e44782b060a5c.png",
     "index.html": "/chucknorrisjokes/index.html",
-    "main.42f78599.css.map": "/chucknorrisjokes/static/css/main.42f78599.css.map",
-    "main.6bc66c4b.js.map": "/chucknorrisjokes/static/js/main.6bc66c4b.js.map",
+    "main.d85b0f04.css.map": "/chucknorrisjokes/static/css/main.d85b0f04.css.map",
+    "main.9ab0faf8.js.map": "/chucknorrisjokes/static/js/main.9ab0faf8.js.map",
     "787.e0a94f49.chunk.js.map": "/chucknorrisjokes/static/js/787.e0a94f49.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.42f78599.css",
-    "static/js/main.6bc66c4b.js"
+    "static/css/main.d85b0f04.css",
+    "static/js/main.9ab0faf8.js"
   ]
 }
