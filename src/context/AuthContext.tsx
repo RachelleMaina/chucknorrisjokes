@@ -1,31 +1,27 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { createCtx } from "./createContext";
 
 type AuthContextProps = {
   children: React.ReactNode;
 };
 
-type ContextValue = {
+type AuthContextType = {
   // TODO: Use camelCase for variable names
-  signup: (username: string, password: string) => void;
-  signin: (username: string, password: string) => void;
-  signout: () => void;
+  signUp: (username: string, password: string) => void;
+  signIn: (username: string, password: string) => void;
+  signOut: () => void;
   authErr: string;
 };
 
-export const AuthContext = React.createContext<ContextValue>({
-  signin: () => {},
-  signup: () => {},
-  signout: () => {},
-  authErr: "",
-});
+const [useAuthContext, CtxProvider] = createCtx<AuthContextType>();
 
-const AuthContextProvider = ({ children }: AuthContextProps) => {
+export const AuthContextProvider = ({ children }: AuthContextProps) => {
   const [authErr, setAuthErr] = useState("");
 
   const navigate = useNavigate();
 
-  const signin = (username: string, password: string) => {
+  const signIn = (username: string, password: string) => {
     //check if username supplied exists else show error
     // TODO: It's better to define actual types for the data you're working with.
     // Helps identify bugs @ compile time and also helps with code readability
@@ -48,7 +44,7 @@ const AuthContextProvider = ({ children }: AuthContextProps) => {
     }
   };
 
-  const signup = (username: string, password: string) => {
+  const signUp = (username: string, password: string) => {
     //check if username supplied exists else store username, password
     const existingCreds = JSON.parse(
       localStorage.getItem("chuck_norris_credentials") || "[]"
@@ -74,16 +70,16 @@ const AuthContextProvider = ({ children }: AuthContextProps) => {
     }
   };
 
-  const signout = () => {
+  const signOut = () => {
     localStorage.setItem("chuck_norris_is_authenticated", "false");
     //navigate to auth form
     navigate("/auth");
   };
 
   return (
-    <AuthContext.Provider value={{ signup, signin, signout, authErr }}>
+    <CtxProvider value={{ signUp, signIn, signOut, authErr }}>
       {children}
-    </AuthContext.Provider>
+    </CtxProvider>
   );
 };
-export default AuthContextProvider;
+export { useAuthContext };
