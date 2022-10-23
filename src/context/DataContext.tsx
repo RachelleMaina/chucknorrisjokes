@@ -26,6 +26,7 @@ const jokesFromLocalStorage = JSON.parse(
 
 type DataContextType = {
   // TODO: Preferably declare a category type and use it instead of any
+  // TODO: @Racheal this is still not resolved
   categories: Array<string>;
   jokesByCategories: Joke;
   dailyFeed: Array<Joke>;
@@ -65,9 +66,6 @@ export const DataContextProvider = ({ children }: DataContextProps) => {
       value: "",
     },
   ]);
-  // TODO: Saved jokes do not reflect on page refresh - You can initialize this array to what's
-  // TODO: already in your local storage or use a useEffect hook to update the state with what's already
-  // TODO: in local storage.
   const [savedJokes, setSavedJokes] = useState<SavedJoke>(
     jokesFromLocalStorage
   );
@@ -104,7 +102,6 @@ export const DataContextProvider = ({ children }: DataContextProps) => {
       const topHits = res.data.issues.slice(0, 40);
       const feed: any = await Promise.all(
         topHits.map((joke: { joke_id: string }) =>
-          //TODO: I'm guessing this might fail (since its a data fetch) - you might want to handle that
           api(`jokes/${joke.joke_id}`)
             .then(({ data }) => data)
             .catch(() => {
@@ -122,10 +119,7 @@ export const DataContextProvider = ({ children }: DataContextProps) => {
   };
 
   const saveJoke = (value: string) => {
-    // TODO: Preferably use types instead of any. @Baly fi
-    // TODO: Also, you can use a Set (which in javascript is O(1) instead of O(n) for lookup in cases of array)
-    // TODO: Set's are also easy to use intuitively - they cannot duplicate values
-
+    // TODO: Preferably use types instead of any. @Racheal this is still not resolved
     let savedJokesSet = new Set(savedJokes);
 
     //toggle between removing and saving

@@ -11,7 +11,7 @@ const Saved = () => {
     if (savedJokes.length === 0) {
       navigate("/");
     }
-  }, [savedJokes]);
+  }, [savedJokes,navigate]);
 
   return (
     <div className="daily-feed-wrapper">
