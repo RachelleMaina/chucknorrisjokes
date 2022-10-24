@@ -20,14 +20,17 @@ type Joke = {
 
 type SavedJoke = Array<string>;
 
-const jokesFromLocalStorage = JSON.parse(
+type SavedJokesSet = Set<string>;
+
+const jokesFromLocalStorage: SavedJoke = JSON.parse(
   localStorage.getItem("chuck_norris_saved_jokes") || "[]"
 );
 
 type DataContextType = {
   // TODO: Preferably declare a category type and use it instead of any
   // TODO: @Racheal this is still not resolved
-  categories: Array<string>;
+  //@Baly fixed
+  categories: Category;
   jokesByCategories: Joke;
   dailyFeed: Array<Joke>;
   dataErr: string;
@@ -120,7 +123,8 @@ export const DataContextProvider = ({ children }: DataContextProps) => {
 
   const saveJoke = (value: string) => {
     // TODO: Preferably use types instead of any. @Racheal this is still not resolved
-    let savedJokesSet = new Set(savedJokes);
+    //@Baly fixed
+    let savedJokesSet: SavedJokesSet = new Set(savedJokes);
 
     //toggle between removing and saving
     if (savedJokesSet.has(value)) {
@@ -130,7 +134,7 @@ export const DataContextProvider = ({ children }: DataContextProps) => {
     }
 
     // store array in local storage
-    let savedJokesArr = Array.from(savedJokesSet);
+    let savedJokesArr: SavedJoke = Array.from(savedJokesSet);
     localStorage.setItem(
       "chuck_norris_saved_jokes",
       JSON.stringify(savedJokesArr)
