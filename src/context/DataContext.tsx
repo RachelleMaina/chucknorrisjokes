@@ -28,8 +28,12 @@ const jokesFromLocalStorage: SavedJoke = JSON.parse(
 
 type DataContextType = {
   // TODO: Preferably declare a category type and use it instead of any
-  // TODO: @Racheal this is still not resolved
-  //@Baly fixed
+  // TODO: @Racheal this is still not resolved - My apologies, I meant type as a general term, not the type keyword.
+  // TODO: as an example, referencing the chucknorris API, categories can be declared as:
+  // TODO: interface Category {
+  // TODO:   id: number;
+  // TODO:   name: string;
+  // TODO: }
   categories: Category;
   jokesByCategories: Joke;
   dailyFeed: Array<Joke>;
@@ -123,7 +127,9 @@ export const DataContextProvider = ({ children }: DataContextProps) => {
 
   const saveJoke = (value: string) => {
     // TODO: Preferably use types instead of any. @Racheal this is still not resolved
-    //@Baly fixed
+    // TODO: @Rachel, my apologies again, I meant type as a general term, not the type keyword.
+    // TODO: So alternatively, the savedJokesSet can be declared as:
+    // TODO: savedJokesSet: Set<string> = new Set(savedJokes);
     let savedJokesSet: SavedJokesSet = new Set(savedJokes);
 
     //toggle between removing and saving

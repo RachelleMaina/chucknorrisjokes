@@ -26,11 +26,6 @@ export const AuthContextProvider = ({ children }: AuthContextProps) => {
   const navigate = useNavigate();
 
   const signIn = (username: string, password: string) => {
-    //check if username supplied exists else show error
-    // TODO: @Racheal, this is still not resolved (declare the array with its type, i.e let creds: Array<UserCreds>)
-    //  It's better to define actual types for the data you're working with.
-    // Helps identify bugs @ compile time and also helps with code readability
-    //@Baly fixed
     const existingCreds: Array<UserCreds> = JSON.parse(
       localStorage.getItem("chuck_norris_credentials") || "[]"
     );
