@@ -1,37 +1,37 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { createCtx } from "./createContext";
 
 type AuthContextProps = {
   children: React.ReactNode;
 };
 
-type ContextValue = {
-  signup: (username: string, password: string) => void;
-  signin: (username: string, password: string) => void;
-  signout: () => void;
+type AuthContextType = {
+  signUp: (username: string, password: string) => void;
+  signIn: (username: string, password: string) => void;
+  signOut: () => void;
   authErr: string;
 };
 
-export const AuthContext = React.createContext<ContextValue>({
-  signin: () => {},
-  signup: () => {},
-  signout: () => {},
-  authErr: "",
-});
+type UserCreds = {
+  username: string;
+  password: string;
+};
 
-const AuthContextProvider = ({ children }: AuthContextProps) => {
+const [useAuthContext, CtxProvider] = createCtx<AuthContextType>();
+
+export const AuthContextProvider = ({ children }: AuthContextProps) => {
   const [authErr, setAuthErr] = useState("");
 
   const navigate = useNavigate();
 
-  const signin = (username: string, password: string) => {
-    //check if username supplied exists else show error
-    const existingCreds = JSON.parse(
+  const signIn = (username: string, password: string) => {
+    const existingCreds: Array<UserCreds> = JSON.parse(
       localStorage.getItem("chuck_norris_credentials") || "[]"
     );
 
-    const correctCreds = existingCreds.some(
-      (item: { username: String; password: String }) =>
+    const correctCreds: boolean = existingCreds.some(
+      (item: { username: String; password: String }): boolean =>
         item.username === username && item.password === password
     );
     if (correctCreds) {
@@ -45,18 +45,18 @@ const AuthContextProvider = ({ children }: AuthContextProps) => {
     }
   };
 
-  const signup = (username: string, password: string) => {
+  const signUp = (username: string, password: string) => {
     //check if username supplied exists else store username, password
-    const existingCreds = JSON.parse(
+    const existingCreds: Array<UserCreds> = JSON.parse(
       localStorage.getItem("chuck_norris_credentials") || "[]"
     );
-    const usernameExists = existingCreds.some(
+    const usernameExists: boolean = existingCreds.some(
       (item: { username: String }) => item.username === username
     );
     if (usernameExists) {
       setAuthErr("This username already exists.");
     } else {
-      let creds = [...existingCreds];
+      let creds: UserCreds[] = [...existingCreds];
       if (username && password) {
         const newCreds = { username, password };
         creds.push(newCreds);
@@ -71,16 +71,16 @@ const AuthContextProvider = ({ children }: AuthContextProps) => {
     }
   };
 
-  const signout = () => {
+  const signOut = () => {
     localStorage.setItem("chuck_norris_is_authenticated", "false");
     //navigate to auth form
     navigate("/auth");
   };
 
   return (
-    <AuthContext.Provider value={{ signup, signin, signout, authErr }}>
+    <CtxProvider value={{ signUp, signIn, signOut, authErr }}>
       {children}
-    </AuthContext.Provider>
+    </CtxProvider>
   );
 };
-export default AuthContextProvider;
+export { useAuthContext };

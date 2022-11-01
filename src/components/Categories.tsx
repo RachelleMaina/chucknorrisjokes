@@ -1,49 +1,55 @@
-import React, { useContext, useEffect } from "react";
-import { DataContext } from "../context/DataContext";
-import { AiOutlineArrowRight } from "react-icons/ai";
-import { useNavigate } from "react-router";
+import React, {useState, useEffect} from "react";
+import {useDataContext} from "../context/DataContext";
+import {AiOutlineArrowRight} from "react-icons/ai";
+import {useNavigate} from "react-router";
 
 const Categories = () => {
-  const { categories, getDailyFeed, getCategories, getJokesByCategories } =
-    useContext(DataContext);
+    const [selectedCat, setSelectedCat] = useState("all jokes");
 
-  const navigate = useNavigate();
+    const {categories, dataErr, getDailyFeed, getCategories} = useDataContext();
 
-  useEffect(() => {
-    getCategories();
-  }, []);
+    const navigate = useNavigate();
 
-  const handleClick = (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    cat: string
-  ) => {
-    event.currentTarget.classList.toggle("active-cat");
-    getJokesByCategories(cat);
-  };
-  const handleClickAll = (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
-    event.currentTarget.classList.toggle("active-cat");
-    getDailyFeed();
-    navigate("/");
-  };
-  return (
-    <div className="joke-cat-wrapper">
-      <div className="joke-cat" onClick={(event) => handleClickAll(event)}>
-        All jokes&nbsp;
-        <AiOutlineArrowRight size={20} />
-      </div>
-      {categories.map((cat, i) => (
-        <div
-          className="joke-cat"
-          key={i}
-          onClick={(event) => handleClick(event, cat)}
-        >
-          {cat}
+    useEffect(() => {
+        getCategories();
+    }, []);
+
+    const setActiveClass = (cat: string) => {
+        setSelectedCat(cat);
+    };
+
+    const handleClick = (cat: string) => {
+        setActiveClass(cat);
+        navigate("/category", {state: {category: cat}});
+    };
+
+    const handleClickAll = () => {
+        setActiveClass("all jokes");
+        getDailyFeed();
+        navigate("/");
+    };
+    return dataErr ? null : (
+        <div className="joke-cat-wrapper">
+            <div
+                className={
+                    "joke-cat  " + (selectedCat === "all jokes" ? "active-cat" : "")
+                }
+                onClick={handleClickAll}
+            >
+                All jokes&nbsp;
+                <AiOutlineArrowRight size={20}/>
+            </div>
+            {categories.map((cat, i) => (
+                <div
+                    className={"joke-cat  " + (selectedCat === cat ? "active-cat" : "")}
+                    key={i}
+                    onClick={() => handleClick(cat)}
+                >
+                    {cat}
+                </div>
+            ))}
         </div>
-      ))}
-    </div>
-  );
+    );
 };
 
 export default Categories;

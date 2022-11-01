@@ -1,17 +1,23 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import { DataContextProvider } from "./context/DataContext";
+import { AuthContextProvider } from "./context/AuthContext";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
 import { HashRouter } from "react-router-dom";
 
 const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
+  document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
     <HashRouter>
-    <App />
+      <DataContextProvider>
+        <AuthContextProvider>
+          <App />
+        </AuthContextProvider>
+      </DataContextProvider>
     </HashRouter>
   </React.StrictMode>
 );

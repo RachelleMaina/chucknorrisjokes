@@ -1,112 +1,183 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router";
+import React, {useState} from "react";
 import api from "../api";
+import {createCtx} from "./createContext";
 
 type DataContextProps = {
-  children: React.ReactNode;
-};
-type ContextValue = {
-  categories: Array<any>;
-  jokesByCategories: Array<any>;
-  dailyFeed: Array<any>;
-  dataErr: string;
-  savedJokes: Array<string>;
-  getCategories: () => void;
-  getJokesByCategories: (category: string) => void;
-  getDailyFeed: () => void;
-  saveJoke: (jokeId: string, value: string) => void;
+    children: React.ReactNode;
 };
 
-export const DataContext = React.createContext<ContextValue>({
-  categories: [],
-  jokesByCategories: [],
-  dailyFeed: [],
-  dataErr: "",
-  savedJokes: [],
-  getCategories: () => {},
-  getJokesByCategories: (category: string) => {},
-  getDailyFeed: () => {},
-  saveJoke: (jokeId: string, value: string) => {},
-});
+/*interface Category {
+    id: string;
+    name: string;
+}*/
 
-const DataContextProvider = ({ children }: DataContextProps) => {
-  const [categories, setCategories] = useState([]);
-  const [jokesByCategories, setJokesByCategories] = useState([]);
-  const [dailyFeed, setDailyFeed] = useState([]);
-  const [savedJokes, setSavedJokes] = useState([]);
-  const [dataErr, setDataErr] = useState("");
+// type Category = Array<string>;
+interface Joke {
+    // TODO: @Rachel Check here
+    // categories: Array<string>;
+    categories: Array<string>;
+    created_at: string;
+    icon_url: string;
+    id: string;
+    updated_at: string;
+    url: string;
+    value: string;
+}
 
-  const navigate = useNavigate();
+type SavedJoke = Array<string>;
 
-  const getCategories = async () => {
-    try {
-      const res = await api.get("jokes/categories");
-      setCategories(res.data);
-    } catch {
-      setDataErr("An error occurred. Please try again later.");
-    }
-  };
+type SavedJokesSet = Set<string>;
 
-  const getJokesByCategories = async (category: string) => {
-    try {
-      const res = await api.get(`jokes/random?category=${category}`);
-      setJokesByCategories(res.data);
-      navigate("/category", { state: { category } });
-    } catch {
-      setDataErr("An error occurred. Please try again later.");
-    }
-  };
-  const getDailyFeed = async () => {
-    try {
-      const res = await api.get("feed/daily-chuck");
-      const topHits = res.data.issues.slice(0, 40);
-      const feed: any = await Promise.all(
-        topHits.map((joke: { joke_id: string }) =>
-          api(`jokes/${joke.joke_id}`).then(({ data }) => data)
-        )
-      );
+const jokesFromLocalStorage: SavedJoke = JSON.parse(
+    localStorage.getItem("chuck_norris_saved_jokes") || "[]"
+);
 
-      setDailyFeed(feed);
-    } catch (e) {
-      setDataErr("An error occurred. Please try again later.");
-    }
-  };
+type DataContextType = {
+    // TODO: Preferably declare a category type and use it instead of any
+    // TODO: @Racheal this is still not resolved - My apologies, I meant type as a general term, not the type keyword.
+    // TODO: as an example, referencing the chucknorris API, categories can be declared as:
+    // TODO: interface Category {
+    // TODO:   id: number;
+    // TODO:   name: string;
+    // TODO: }
+    categories: Array<string>; // Category[]
+    jokesByCategories: Joke;
+    dailyFeed: Array<Joke>;
+    dataErr: string;
+    savedJokes: SavedJoke;
+    catLoading: boolean;
+    dailyFeedLoading: boolean;
+    jokesByCatLoading: boolean;
+    getCategories: () => void;
+    getJokesByCategories: (category: string) => void;
+    getDailyFeed: () => void;
+    saveJoke: (value: string) => void;
+};
 
-  const saveJoke = (jokeId: string, value: string) => {
-    const savedJokes = JSON.parse(
-      localStorage.getItem("chuck_norris_saved_jokes") || "[]"
+const [useDataContext, CtxProvider] = createCtx<DataContextType>();
+
+export const DataContextProvider = ({children}: DataContextProps) => {
+    const [categories, setCategories] = useState<string[]>([]);
+
+    // TODO: @Rachel - check here.
+    // const singleCategory = categories[0];
+    // singleCategory.description = "test";
+    const [jokesByCategories, setJokesByCategories] = useState<Joke>({
+        categories: [],
+        created_at: "",
+        icon_url: "",
+        id: "",
+        updated_at: "",
+        url: "",
+        value: "",
+    });
+
+    const [dailyFeed, setDailyFeed] = useState<Array<Joke>>([
+        {
+            categories: [],
+            created_at: "",
+            icon_url: "",
+            id: "",
+            updated_at: "",
+            url: "",
+            value: "",
+        },
+    ]);
+    const [savedJokes, setSavedJokes] = useState<SavedJoke>(
+        jokesFromLocalStorage
     );
-    const index = savedJokes.indexOf(jokeId);
-    //joke not saved
-    if (index === -1) {
-      savedJokes.push(jokeId);
-    } else {
-      savedJokes.splice(index, 1);
-    }
-    // store array in local storage
-    localStorage.setItem(
-      "chuck_norris_saved_jokes",
-      JSON.stringify(savedJokes)
-    );
-    setSavedJokes(savedJokes);
-  };
+    const [dataErr, setDataErr] = useState("");
+    const [catLoading, setCatLoading] = useState(true);
+    const [dailyFeedLoading, setDailyFeedLoading] = useState(true);
+    const [jokesByCatLoading, setJokesByCatLoading] = useState(false);
 
-  return (
-    <DataContext.Provider
-      value={{
-        categories,
-        jokesByCategories,
-        dailyFeed,
-        dataErr,
-        savedJokes,
-        saveJoke,
-        getCategories,
-        getJokesByCategories,
-        getDailyFeed,
-      }}
-    >
-      {children}
-    </DataContext.Provider>
-  );
+    const getCategories = async () => {
+        try {
+            const res = await api.get("jokes/categories");
+            setCategories(res.data);
+        } catch (error) {
+            setDataErr("An error occurred. Please try again later.");
+        } finally {
+            setCatLoading(false);
+        }
+    };
+
+    const getJokesByCategories = async (category: string) => {
+        try {
+            setJokesByCatLoading(true);
+            const res = await api.get(`jokes/random?category=${category}`);
+            setJokesByCategories(res.data);
+        } catch (error) {
+            setDataErr("An error occurred. Please try again later.");
+        } finally {
+            setJokesByCatLoading(false);
+        }
+    };
+    const getDailyFeed = async () => {
+        try {
+            const res = await api.get("feed/daily-chuck");
+            const topHits = res.data.issues.slice(0, 40);
+            const feed: any = await Promise.all(
+                topHits.map((joke: { joke_id: string }) =>
+                    api(`jokes/${joke.joke_id}`)
+                        .then(({data}) => data)
+                        .catch(() => {
+                            setDataErr("An error occurred. Please try again later.");
+                        })
+                )
+            );
+
+            setDailyFeed(feed);
+        } catch (error) {
+            setDataErr("An error occurred. Please try again later.");
+        } finally {
+            setDailyFeedLoading(false);
+        }
+    };
+
+    const saveJoke = (value: string) => {
+        // TODO: Preferably use types instead of any. @Racheal this is still not resolved
+        // TODO: @Rachel, my apologies again, I meant type as a general term, not the type keyword.
+        // TODO: So alternatively, the savedJokesSet can be declared as:
+        // TODO: savedJokesSet: Set<string> = new Set(savedJokes);
+        let savedJokesSet: SavedJokesSet = new Set(savedJokes);
+
+        //toggle between removing and saving
+        if (savedJokesSet.has(value)) {
+            savedJokesSet.delete(value);
+        } else {
+            savedJokesSet.add(value);
+        }
+
+        // store array in local storage
+        let savedJokesArr: SavedJoke = Array.from(savedJokesSet);
+        localStorage.setItem(
+            "chuck_norris_saved_jokes",
+            JSON.stringify(savedJokesArr)
+        );
+        setSavedJokes(savedJokesArr);
+    };
+
+    return (
+        <CtxProvider
+            value={{
+                categories,
+                jokesByCategories,
+                dailyFeed,
+                dataErr,
+                savedJokes,
+                catLoading,
+                dailyFeedLoading,
+                jokesByCatLoading,
+                saveJoke,
+                getCategories,
+                getJokesByCategories,
+                getDailyFeed,
+            }}
+        >
+            {children}
+        </CtxProvider>
+    );
 };
-export default DataContextProvider;
+
+export {useDataContext};
